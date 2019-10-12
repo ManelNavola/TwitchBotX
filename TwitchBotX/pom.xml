@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>TwitchBotX</groupId>
 	<artifactId>TwitchBotX</artifactId>
-	<version>0.1</version>
+	<version>0.2</version>
 	<name>Twitch Bot X</name>
 	<description>Twitch-compatible Java implementation of PircBotX</description>
 	<build>
