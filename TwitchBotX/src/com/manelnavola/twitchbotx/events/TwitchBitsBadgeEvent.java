@@ -5,9 +5,11 @@ package com.manelnavola.twitchbotx.events;
 
 public class TwitchBitsBadgeEvent extends TwitchEvent {
 	private int badgeTierBitAmount = -1;
+	private String sourceName = "";
 
 	public TwitchBitsBadgeEvent(UserNoticeEvent event) {
 		super(event);
+		this.sourceName = (String) this.tags.get("display-name");
 		try {
 			this.badgeTierBitAmount = Integer.parseInt((String) this.tags.get("msg-param-threshold"));
 		} catch (NumberFormatException numberFormatException) {
@@ -17,5 +19,9 @@ public class TwitchBitsBadgeEvent extends TwitchEvent {
 
 	public int getBadgeTierBitAmount() {
 		return this.badgeTierBitAmount;
+	}
+	
+	public String getSourceName() {
+		return this.sourceName;
 	}
 }
