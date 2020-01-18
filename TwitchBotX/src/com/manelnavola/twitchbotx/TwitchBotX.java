@@ -87,7 +87,18 @@ public class TwitchBotX extends TwitchListenerAdapter {
 	public void onMessage(MessageEvent event) throws Exception {
 		TwitchUser tu = this.getTwitchUser((Map<String, String>) event.getV3Tags());
 		if (tu != null) {
-			this.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource()));
+			if (event.getV3Tags().containsKey("bits")) {
+				try {
+					int bits = Integer.parseInt(event.getV3Tags().get("bits"));
+					this.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource(),
+							bits));
+				} catch (NumberFormatException nfe) {
+					nfe.printStackTrace();
+				}
+				
+			} else {
+				this.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource()));
+			}
 		}
 	}
 
