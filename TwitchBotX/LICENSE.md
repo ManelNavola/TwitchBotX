@@ -1,6 +1,6 @@
-# Twitch Bot X, Twitch-compatible Java implementation of PircBotX
+# Twitch Bot X, Twitch-focused Java implementation of PircBotX
 
-*Copyright (C) 2019-2020 Manel Navola, TwitchBotX contributors.*
+*The following code uses PircBotX [https://github.com/pircbotx/pircbotx](https://github.com/pircbotx/pircbotx), which is forked from the PircBot framework. This program is an incomplete implementation of Twitch events into an IRC bot via parsing the tags in the IRC messages, and is at the moment tailored to fit only the needs of MCInteractive, a Minecraft plugin*
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

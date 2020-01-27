@@ -4,7 +4,7 @@ import java.util.Map;
 
 import com.manelnavola.twitchbotx.TwitchMessage;
 
-public class TwitchEvent {
+public abstract class TwitchEvent {
 	protected String channel;
 	protected Map<String, String> tags;
 	protected TwitchMessage message;

@@ -11,12 +11,15 @@ import javax.net.ssl.SSLSocketFactory;
 import org.pircbotx.Channel;
 import org.pircbotx.Configuration;
 import org.pircbotx.PircBotX;
+import org.pircbotx.hooks.Event;
+import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import com.manelnavola.twitchbotx.events.*;
 
-public class TwitchBotX extends TwitchListenerAdapter {
+public class TwitchBotX extends ListenerAdapter {
 	
+	private TwitchBotXInterface tbxi;
 	private PircBotX bot = new PircBotX(new Configuration.Builder().setAutoNickChange(false).setOnJoinWhoEnabled(false)
 			.setName("justinfan12345").addServer("irc.twitch.tv", 6697).setSocketFactory(SSLSocketFactory.getDefault())
 			.addListener(this).setBotFactory((Configuration.BotFactory) new TwitchBotXFactory()).buildConfiguration());
@@ -37,9 +40,18 @@ public class TwitchBotX extends TwitchListenerAdapter {
 		}
 	};
 	private Map<String, TwitchUser> userMap = new HashMap<String, TwitchUser>();
-
-	public TwitchBotX() {
+	
+	public TwitchBotX(TwitchBotXInterface inter) {
+		tbxi = inter;
 		this.botStartThread.start();
+	}
+	
+	public void onEvent(Event event) throws Exception {
+		if (event instanceof UserNoticeEvent) {
+			this.onUserNotice((UserNoticeEvent) event);
+		} else {
+			super.onEvent(event);
+		}
 	}
 
 	public PircBotX getPircBotX() {
@@ -81,84 +93,67 @@ public class TwitchBotX extends TwitchListenerAdapter {
 		return false;
 	}
 
-	public void onTwitchMessage(TwitchMessageEvent tm) {
-	}
-
 	public void onMessage(MessageEvent event) throws Exception {
+		if (tbxi == null) {
+			System.err.println("This twitch bot does not have an interface!");
+			return;
+		}
 		TwitchUser tu = this.getTwitchUser((Map<String, String>) event.getV3Tags());
 		if (tu != null) {
 			if (event.getV3Tags().containsKey("bits")) {
 				try {
 					int bits = Integer.parseInt(event.getV3Tags().get("bits"));
-					this.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource(),
+					tbxi.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource(),
 							bits));
 				} catch (NumberFormatException nfe) {
 					nfe.printStackTrace();
 				}
 				
 			} else {
-				this.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource()));
+				tbxi.onTwitchMessage(new TwitchMessageEvent(tu, event.getMessage(), event.getChannelSource()));
 			}
 		}
 	}
 
-	public void onTwitchSubscription(TwitchSubscriptionEvent tsee) {
-	}
-
-	public void onTwitchMysteryGift(TwitchMysteryGiftEvent te) {
-	}
-
-	public void onTwitchGiftUpgrade(TwitchGiftUpgradeEvent tue) {
-	}
-
-	public void onTwitchReward(TwitchRewardEvent tre) {
-	}
-
-	public void onTwitchRaid(TwitchRaidEvent tre) {
-	}
-
-	public void onTwitchRitual(TwitchRitualEvent tre) {
-	}
-
-	public void onTwitchBitsBadge(TwitchBitsBadgeEvent tbbe) {
-	}
-
-	@Override
 	public void onUserNotice(UserNoticeEvent event) throws Exception {
 		String msgId = (String) event.getV3Tags().get((Object) "msg-id");
+		if (tbxi == null) {
+			System.err.println("This twitch bot does not have an interface!");
+			return;
+		}
 		if (msgId != null) {
 			switch (msgId) {
 			case "sub":
 			case "resub":
 			case "subgift":
 			case "anonsubgift": {
-				this.onTwitchSubscription(new TwitchSubscriptionEvent(event));
+				tbxi.onTwitchSubscription(new TwitchSubscriptionEvent(event));
 				return;
 			}
 			case "submysterygift": {
-				this.onTwitchMysteryGift(new TwitchMysteryGiftEvent(event));
+				tbxi.onTwitchMysteryGift(new TwitchMysteryGiftEvent(event));
 				return;
 			}
 			case "giftpaidupgrade":
 			case "anongiftpaidupgrade": {
-				this.onTwitchGiftUpgrade(new TwitchGiftUpgradeEvent(event));
+				tbxi.onTwitchGiftUpgrade(new TwitchGiftUpgradeEvent(event));
 				return;
 			}
 			case "rewardgift": {
-				this.onTwitchReward(new TwitchRewardEvent(event));
+				tbxi.onTwitchReward(new TwitchRewardEvent(event));
 				return;
 			}
 			case "raid":
 			case "unraid": {
-				this.onTwitchRaid(new TwitchRaidEvent(event));
+				tbxi.onTwitchRaid(new TwitchRaidEvent(event));
 				return;
 			}
 			case "ritual": {
-				this.onTwitchRitual(new TwitchRitualEvent(event));
+				tbxi.onTwitchRitual(new TwitchRitualEvent(event));
 				return;
 			}
 			case "bitsbadgetier": {
-				this.onTwitchBitsBadge(new TwitchBitsBadgeEvent(event));
+				tbxi.onTwitchBitsBadge(new TwitchBitsBadgeEvent(event));
 				return;
 			}
 			}
