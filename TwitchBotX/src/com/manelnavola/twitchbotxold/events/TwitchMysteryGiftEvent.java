@@ -1,4 +1,4 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
 public class TwitchMysteryGiftEvent extends TwitchEvent {
 	public String sourceName;

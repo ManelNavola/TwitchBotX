@@ -1,4 +1,4 @@
-package com.manelnavola.twitchbotx;
+package com.manelnavola.twitchbotxold;
 
 import java.util.List;
 

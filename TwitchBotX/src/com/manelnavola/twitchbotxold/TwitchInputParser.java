@@ -1,7 +1,7 @@
-package com.manelnavola.twitchbotx;
+package com.manelnavola.twitchbotxold;
 
-import com.manelnavola.twitchbotx.TwitchMessage;
-import com.manelnavola.twitchbotx.events.UserNoticeEvent;
+import com.manelnavola.twitchbotxold.TwitchMessage;
+import com.manelnavola.twitchbotxold.events.UserNoticeEvent;
 import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +25,9 @@ public class TwitchInputParser extends InputParser {
 		Channel channel = target.length() != 0 && this.bot.getUserChannelDao().containsChannel(target)
 				? this.bot.getUserChannelDao().getChannel(target)
 				: null;
+		// Check if command belongs to USERNOTICE
 		if (command.equals("USERNOTICE")) {
+			// Build a Twitch Message
 			TwitchMessage tm = new TwitchMessage("", parseEmotes(tags.get("emotes")));
 			this.configuration.getListenerManager()
 					.onEvent((Event) new UserNoticeEvent(this.bot, channel, target, source, tags, tm, line));

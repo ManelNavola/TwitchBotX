@@ -1,7 +1,7 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
-import com.manelnavola.twitchbotx.events.TwitchEvent;
-import com.manelnavola.twitchbotx.events.UserNoticeEvent;
+import com.manelnavola.twitchbotxold.events.TwitchEvent;
+import com.manelnavola.twitchbotxold.events.UserNoticeEvent;
 
 public class TwitchSubscriptionEvent extends TwitchEvent {
 	private String gifterName = "";

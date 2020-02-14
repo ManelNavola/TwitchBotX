@@ -1,4 +1,4 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
 public class TwitchRaidEvent extends TwitchEvent {
 	private String raiderName = (String) this.tags.get("msg-param-displayName");

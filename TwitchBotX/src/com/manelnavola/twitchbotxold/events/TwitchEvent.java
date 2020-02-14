@@ -1,8 +1,8 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
 import java.util.Map;
 
-import com.manelnavola.twitchbotx.TwitchMessage;
+import com.manelnavola.twitchbotxold.TwitchMessage;
 
 public abstract class TwitchEvent {
 	protected String channel;

@@ -1,7 +1,7 @@
 /*
  * Decompiled with CFR 0.137.
  */
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
 public class TwitchBitsBadgeEvent extends TwitchEvent {
 	private int badgeTierBitAmount = -1;

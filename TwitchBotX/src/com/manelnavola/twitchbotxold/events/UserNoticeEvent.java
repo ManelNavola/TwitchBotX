@@ -1,12 +1,12 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
 import org.pircbotx.Channel;
 import org.pircbotx.PircBotX;
 import org.pircbotx.UserHostmask;
 import org.pircbotx.hooks.Event;
 
-import com.manelnavola.twitchbotx.TwitchMessage;
 import com.google.common.collect.ImmutableMap;
+import com.manelnavola.twitchbotxold.TwitchMessage;
 
 public class UserNoticeEvent extends Event {
 	private final Channel channel;

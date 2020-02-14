@@ -1,6 +1,6 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
-import com.manelnavola.twitchbotx.TwitchUser;
+import com.manelnavola.twitchbotxold.TwitchUser;
 
 public class TwitchMessageEvent {
 	private TwitchUser user;

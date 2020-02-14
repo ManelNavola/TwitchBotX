@@ -1,4 +1,4 @@
-package com.manelnavola.twitchbotx;
+package com.manelnavola.twitchbotxold;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import org.pircbotx.hooks.Event;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.MessageEvent;
 
-import com.manelnavola.twitchbotx.events.*;
+import com.manelnavola.twitchbotxold.events.*;
 
 public class TwitchBotX extends ListenerAdapter {
 	

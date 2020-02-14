@@ -1,4 +1,4 @@
-package com.manelnavola.twitchbotx.events;
+package com.manelnavola.twitchbotxold.events;
 
 public class TwitchRewardEvent extends TwitchEvent {
 	private String sourceName = (String) this.tags.get("display-name");
