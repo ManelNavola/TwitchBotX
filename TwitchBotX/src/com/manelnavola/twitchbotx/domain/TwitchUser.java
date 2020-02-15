@@ -1,66 +1,101 @@
-package twitchbotx.domain;
+package com.manelnavola.twitchbotx.domain;
 
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+/**
+ * Utility class for representing a Twitch User
+ * 
+ * @author Manel Navola
+ *
+ */
 public class TwitchUser {
-	
+
+	private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(TwitchUser.class);
+
+	/**
+	 * Different badges a TwitchUser can have
+	 *
+	 */
 	public enum Badge {
-		TURBO((byte) 0), SUBSCRIBER((byte) 1),
-		MODERATOR((byte) 2), BROADCASTER((byte) 3),
-		STAFF((byte) 4), GLOBAL_MOD((byte) 5),
-		ADMIN((byte) 6), BITS((byte) 7);
-		
+		TURBO((byte) 0), SUBSCRIBER((byte) 1), MODERATOR((byte) 2), BROADCASTER((byte) 3), STAFF((byte) 4),
+		GLOBAL_MOD((byte) 5), ADMIN((byte) 6), BITS((byte) 7);
+
 		private byte value;
-		
+
+		/**
+		 * Enum constructor
+		 * 
+		 * @param value The numerical value assigned to this enum in byte form
+		 */
 		private Badge(byte value) {
 			this.value = value;
 		}
-		
+
+		/**
+		 * Gets the numerical value assigned to this enum
+		 * 
+		 * @return Numerical value in byte form
+		 */
 		public byte getValue() {
 			return this.value;
 		}
 	}
-	
+
 	private Short subscriptionMonths;
 	private boolean[] badges;
 	private final Map<String, String> tags;
-	
-	public TwitchUser(final Map<String, String> tags) {
+
+	/**
+	 * TwitchUser constructor
+	 * 
+	 * @param tags The tags to parse the TwitchUser with
+	 */
+	public TwitchUser(@NonNull final Map<String, String> tags) {
 		this.tags = tags;
 	}
-	
+
 	/**
-	 * Gets all user tags,
-	 * used for exceptional cases
+	 * Gets all user tags, used for exceptional cases
+	 * 
 	 * @return The user tags
 	 */
+	@NonNull
 	public Map<String, String> getTags() {
 		return tags;
 	}
-	
+
 	/**
 	 * Gets the user id of the user
+	 * 
 	 * @return The user id
 	 */
+	@Nullable
 	public String getUserId() {
 		return tags.get("user-id");
 	}
-	
+
 	/**
 	 * Gets the display name of the user
+	 * 
 	 * @return The display name
 	 */
+	@Nullable
 	public String getDisplayName() {
 		return tags.get("display-name");
 	}
-	
+
 	/**
 	 * Gets the subscription months of the user,
+	 * 
 	 * @return The number of subscription months or -1 if absent
 	 */
 	public short getSubscribedMonths() {
-		if (this.subscriptionMonths != null) return this.subscriptionMonths;
+		if (this.subscriptionMonths != null)
+			return this.subscriptionMonths;
 		String badgeInfo;
 		if ((badgeInfo = tags.get("badge-info")) != null) {
 			StringTokenizer st = new StringTokenizer(badgeInfo, ",");
@@ -72,7 +107,7 @@ public class TwitchUser {
 						this.subscriptionMonths = Short.parseShort(badge[1]);
 						return this.subscriptionMonths;
 					} catch (NumberFormatException nfe) {
-						;
+						LOG.error("Error parsing subscription months", nfe);
 					}
 					break;
 				}
@@ -80,9 +115,11 @@ public class TwitchUser {
 		}
 		return -1;
 	}
-	
+
 	/**
-	 * Checks if the user belongs to a certain role
+	 * Checks if the user contains a certain badge
+	 * 
+	 * @param badge The badge to check
 	 * @return True if the user belongs to that role
 	 */
 	public boolean hasBadge(Badge badge) {
@@ -122,5 +159,5 @@ public class TwitchUser {
 		}
 		return this.badges[badge.getValue()];
 	}
-	
+
 }
