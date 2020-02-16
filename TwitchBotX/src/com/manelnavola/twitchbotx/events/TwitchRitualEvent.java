@@ -24,7 +24,7 @@ public class TwitchRitualEvent extends TwitchUserNoticeEvent {
 	public TwitchRitualEvent(@NonNull String channelName, @NonNull Map<String, String> tags) {
 		super(channelName, tags);
 
-		ritualName = tags.get("msg-param-ritual-name");
+		this.ritualName = tags.get("msg-param-ritual-name");
 	}
 
 	/**

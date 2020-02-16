@@ -28,10 +28,13 @@ public class TwitchBitsBadgeEvent extends TwitchUserNoticeEvent {
 		super(channelName, tags);
 
 		this.sourceDisplayName = tags.get("display-name");
-		try {
-			this.badgeTierBitsAmount = Integer.parseInt(tags.get("msg-param-threshold"));
-		} catch (NumberFormatException numberFormatException) {
-			LOG.warn("Could not parse badge tier bits amount!", numberFormatException);
+		String tempString = tags.get("msg-param-threshold");
+		if (tempString != null) {
+			try {
+				this.badgeTierBitsAmount = Integer.parseInt(tempString);
+			} catch (NumberFormatException numberFormatException) {
+				LOG.warn("Could not parse badge tier bits amount!", numberFormatException);
+			}
 		}
 	}
 

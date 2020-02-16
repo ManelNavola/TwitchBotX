@@ -42,44 +42,59 @@ public class TwitchSubscriptionEvent extends TwitchUserNoticeEvent {
 			LOG.warn("Subscription event did not contain a msg-id!");
 		}
 
+		String tempString;
+
 		switch (switchString) {
 		case "resub":
 			this.isResub = true;
 		case "sub":
 			this.receiverDisplayName = tags.get("display-name");
-			try {
-				this.subMonths = Short.parseShort((String) tags.get("msg-param-cumulative-months"));
-			} catch (NumberFormatException numberFormatException) {
-				LOG.warn("Could not parse sub months!", numberFormatException);
-			}
-			try {
-				if (Boolean.parseBoolean(tags.get("msg-param-should-share-streak"))) {
-					try {
-						this.subMonthsStreak = Short.parseShort(tags.get("msg-param-streak-months"));
-					} catch (NumberFormatException numberFormatException) {
-					}
+			tempString = tags.get("msg-param-cumulative-months");
+			if (tempString != null) {
+				try {
+					this.subMonths = Short.parseShort(tempString);
+				} catch (NumberFormatException numberFormatException) {
+					LOG.warn("Could not parse sub months!", numberFormatException);
 				}
-			} catch (NumberFormatException numberFormatException) {
-				LOG.warn("Could not parse sub month streak!", numberFormatException);
+			}
+			tempString = tags.get("msg-param-should-share-streak");
+			if (tempString != null) {
+				try {
+					if (Boolean.parseBoolean(tempString)) {
+						try {
+							this.subMonthsStreak = Short.parseShort(tags.get("msg-param-streak-months"));
+						} catch (NumberFormatException numberFormatException) {
+							LOG.warn("Could not parse sub month streak amount!", numberFormatException);
+						}
+					}
+				} catch (NumberFormatException numberFormatException) {
+					LOG.warn("Could not parse sub month streak condition!", numberFormatException);
+				}
 			}
 			break;
 		case "subgift":
 			this.isGift = true;
 			this.gifterDisplayName = tags.get("display-name");
-			try {
-				this.subMonths = Short.parseShort(tags.get("msg-param-months"));
-			} catch (NumberFormatException numberFormatException) {
-				LOG.warn("Could not parse sub months!", numberFormatException);
+			tempString = tags.get("msg-param-months");
+			if (tempString != null) {
+				try {
+					this.subMonths = Short.parseShort(tempString);
+				} catch (NumberFormatException numberFormatException) {
+					LOG.warn("Could not parse sub months!", numberFormatException);
+				}
 			}
 			this.receiverDisplayName = tags.get("msg-param-recipient-display-name");
 			break;
 		case "anonsubgift":
 			this.isGift = true;
 			this.isAnon = true;
-			try {
-				this.subMonths = Short.parseShort(tags.get("msg-param-months"));
-			} catch (NumberFormatException numberFormatException) {
-				LOG.warn("Could not parse sub months!", numberFormatException);
+			tempString = tags.get("msg-param-months");
+			if (tempString != null) {
+				try {
+					this.subMonths = Short.parseShort(tempString);
+				} catch (NumberFormatException numberFormatException) {
+					LOG.warn("Could not parse sub months!", numberFormatException);
+				}
 			}
 			this.receiverDisplayName = tags.get("msg-param-recipient-display-name");
 			break;
@@ -88,24 +103,24 @@ public class TwitchSubscriptionEvent extends TwitchUserNoticeEvent {
 		switchString = tags.get("msg-param-sub-plan");
 		if (switchString == null) {
 			LOG.warn("Subscription event did not contain a msg-param-sub-plan!");
-		}
-
-		switch (switchString) {
-		case "Prime": {
-			this.subPlan = SubPlan.PRIME;
-			break;
-		}
-		case "1000": {
-			this.subPlan = SubPlan.LEVEL_1;
-			break;
-		}
-		case "2000": {
-			this.subPlan = SubPlan.LEVEL_2;
-			break;
-		}
-		case "3000": {
-			this.subPlan = SubPlan.LEVEL_3;
-		}
+		} else {
+			switch (switchString) {
+			case "Prime": {
+				this.subPlan = SubPlan.PRIME;
+				break;
+			}
+			case "1000": {
+				this.subPlan = SubPlan.LEVEL_1;
+				break;
+			}
+			case "2000": {
+				this.subPlan = SubPlan.LEVEL_2;
+				break;
+			}
+			case "3000": {
+				this.subPlan = SubPlan.LEVEL_3;
+			}
+			}
 		}
 		this.subPlanName = tags.get("msg-param-sub-plan-name");
 	}

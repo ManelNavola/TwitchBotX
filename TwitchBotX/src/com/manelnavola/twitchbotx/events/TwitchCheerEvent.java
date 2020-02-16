@@ -25,10 +25,13 @@ public class TwitchCheerEvent extends TwitchMessageEvent {
 	public TwitchCheerEvent(@NonNull String channelName, @NonNull Map<String, String> tags) {
 		super(channelName, tags, tags.get("message"));
 
-		try {
-			this.bits = Integer.parseInt(tags.get("bits"));
-		} catch (NumberFormatException numberFormatException) {
-			LOG.warn("Could not parse bit amount!", numberFormatException);
+		String tempString = tags.get("bits");
+		if (tempString != null) {
+			try {
+				this.bits = Integer.parseInt(tempString);
+			} catch (NumberFormatException numberFormatException) {
+				LOG.warn("Could not parse bit amount!", numberFormatException);
+			}
 		}
 	}
 

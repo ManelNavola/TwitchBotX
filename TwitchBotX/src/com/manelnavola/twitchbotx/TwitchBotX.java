@@ -59,7 +59,7 @@ public class TwitchBotX {
 		twitchFactory = new TwitchFactory(this);
 
 		pircBotX = new PircBotX(new Configuration.Builder().setAutoNickChange(false).setOnJoinWhoEnabled(false)
-				.setEncoding(Charset.forName("UTF-8")).setName("justinfan12345").addServer("irc.tweitch.tv", 6697)
+				.setEncoding(Charset.forName("UTF-8")).setName("justinfan12345").addServer("irc.twitch.tv", 6697)
 				.setSocketFactory(SSLSocketFactory.getDefault()).addListener(twitchListener)
 				.setBotFactory(twitchFactory).setAutoReconnect(true).setAutoReconnectAttempts(reconnectAttempts)
 				.setAutoReconnectDelay(reconnectDelay).buildConfiguration());

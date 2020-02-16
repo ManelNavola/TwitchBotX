@@ -30,23 +30,32 @@ public class TwitchRewardEvent extends TwitchUserNoticeEvent {
 	public TwitchRewardEvent(@NonNull String channelName, @NonNull Map<String, String> tags) {
 		super(channelName, tags);
 
-		sourceDisplayName = tags.get("display-name");
-		domain = tags.get("msg-param-domain");
+		this.sourceDisplayName = tags.get("display-name");
+		this.domain = tags.get("msg-param-domain");
 
-		try {
-			this.bitsAmount = Integer.parseInt(tags.get("msg-param-bits-amount"));
-		} catch (NumberFormatException numberFormatException) {
-			LOG.warn("Could not parse bits amount!", numberFormatException);
+		String tempString = tags.get("msg-param-bits-amount");
+		if (tags.get("msg-param-bits-amount") != null) {
+			try {
+				this.bitsAmount = Integer.parseInt(tempString);
+			} catch (NumberFormatException numberFormatException) {
+				LOG.warn("Could not parse bits amount!", numberFormatException);
+			}
 		}
-		try {
-			this.minCheerAmount = Integer.parseInt(tags.get("msg-param-min-cheer-amount"));
-		} catch (NumberFormatException numberFormatException) {
-			LOG.warn("Could not parse min cheer amount!", numberFormatException);
+		tempString = tags.get("msg-param-min-cheer-amount");
+		if (tempString != null) {
+			try {
+				this.minCheerAmount = Integer.parseInt(tempString);
+			} catch (NumberFormatException numberFormatException) {
+				LOG.warn("Could not parse min cheer amount!", numberFormatException);
+			}
 		}
-		try {
-			this.selectedCount = Integer.parseInt(tags.get("msg-param-selected-count"));
-		} catch (NumberFormatException numberFormatException) {
-			LOG.warn("Could not parse selected count!", numberFormatException);
+		tempString = tags.get("msg-param-selected-count");
+		if (tempString != null) {
+			try {
+				this.selectedCount = Integer.parseInt(tempString);
+			} catch (NumberFormatException numberFormatException) {
+				LOG.warn("Could not parse selected count!", numberFormatException);
+			}
 		}
 	}
 

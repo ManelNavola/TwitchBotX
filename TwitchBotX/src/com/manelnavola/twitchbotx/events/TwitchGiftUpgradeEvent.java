@@ -37,10 +37,13 @@ public class TwitchGiftUpgradeEvent extends TwitchUserNoticeEvent {
 			this.gifterDisplayName = tags.get("msg-param-sender-name");
 		}
 		this.promoName = tags.get("msg-param-promo-name");
-		try {
-			this.gifterTotalGifts = Integer.parseInt(tags.get("msg-param-promo-gift-total"));
-		} catch (NumberFormatException numberFormatException) {
-			LOG.warn("Could not parse total gift amount!", numberFormatException);
+		String tempString = tags.get("msg-param-promo-gift-total");
+		if (tempString != null) {
+			try {
+				this.gifterTotalGifts = Integer.parseInt(tempString);
+			} catch (NumberFormatException numberFormatException) {
+				LOG.warn("Could not parse total gift amount!", numberFormatException);
+			}
 		}
 	}
 

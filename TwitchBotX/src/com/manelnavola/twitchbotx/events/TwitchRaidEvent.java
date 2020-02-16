@@ -32,10 +32,13 @@ public class TwitchRaidEvent extends TwitchUserNoticeEvent {
 
 		if ("raid".equals(tags.get("msg-id"))) {
 			this.raidEnded = false;
-			try {
-				this.raidSize = Integer.parseInt(tags.get("msg-param-viewerCount"));
-			} catch (NumberFormatException numberFormatException) {
-				LOG.warn("Could not parse raid size!", numberFormatException);
+			String tempString = tags.get("msg-param-viewerCount");
+			if (tempString != null) {
+				try {
+					this.raidSize = Integer.parseInt(tempString);
+				} catch (NumberFormatException numberFormatException) {
+					LOG.warn("Could not parse raid size!", numberFormatException);
+				}
 			}
 		} else if ("unraid".equals(tags.get("msg-id"))) {
 			this.raidEnded = true;
