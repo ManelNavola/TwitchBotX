@@ -4,7 +4,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 import org.pircbotx.hooks.ListenerAdapter;
 import org.pircbotx.hooks.events.ConnectEvent;
-import org.pircbotx.hooks.events.DisconnectEvent;
 import org.pircbotx.hooks.events.MessageEvent;
 
 import com.manelnavola.twitchbotx.TwitchBotX;
@@ -49,16 +48,9 @@ public class TwitchListener extends ListenerAdapter {
 	public void onConnect(ConnectEvent event) throws Exception {
 		super.onConnect(event);
 		event.getBot().sendRaw().rawLineNow("CAP REQ :twitch.tv/tags twitch.tv/commands");
-		twitchBotX.setIsConnectedInternalUseOnly(true);
-	}
-
-	/**
-	 * Override onDisconnect event to catch failing to login in Twitch Servers
-	 */
-	@Override
-	public void onDisconnect(DisconnectEvent event) throws Exception {
-		super.onDisconnect(event);
-		twitchBotX.stop();
+		this.twitchBotX.zConfirmBotIsConnectedInternalUseOnly();
+		if (this.twitchBotXListenerAdapter != null)
+			this.twitchBotXListenerAdapter.onConnectSuccess();
 	}
 
 	/**
@@ -66,6 +58,7 @@ public class TwitchListener extends ListenerAdapter {
 	 */
 	@Override
 	public void onMessage(MessageEvent event) throws Exception {
+		super.onMessage(event);
 		if (this.twitchBotXListenerAdapter != null) {
 			if (event.getV3Tags().containsKey("bits")) {
 				// Bits message

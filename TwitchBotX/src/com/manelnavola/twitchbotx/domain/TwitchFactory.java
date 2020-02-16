@@ -31,7 +31,7 @@ public class TwitchFactory extends Configuration.BotFactory {
 	 */
 	@Override
 	public InputParser createInputParser(PircBotX pircBotX) {
-		return new TwitchParser(twitchBotX);
+		return new TwitchParser(twitchBotX, pircBotX);
 	}
 
 }

@@ -1,7 +1,8 @@
 package com.manelnavola.twitchbotx.domain;
 
 import org.eclipse.jdt.annotation.NonNull;
-import org.pircbotx.PircBotX;
+
+import com.manelnavola.twitchbotx.TwitchBotX;
 
 /**
  * The thread in charge of maintaining a thread for the PircBotX connection
@@ -12,18 +13,17 @@ import org.pircbotx.PircBotX;
  */
 public class TwitchBotXConnectThread extends Thread {
 
-	private PircBotX pircBotX;
-	private Exception exitException;
-
-	private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(TwitchBotXConnectThread.class);
+	private boolean hasShutdown = false;
+	private TwitchBotX twitchBotX = null;
+	private Exception exitException = null;
 
 	/**
 	 * TwitchBotXConnectThread constructor
 	 * 
-	 * @param pircBotX The bot to start
+	 * @param twitchBotX The bot to start
 	 */
-	public TwitchBotXConnectThread(@NonNull PircBotX pircBotX) {
-		this.pircBotX = pircBotX;
+	public TwitchBotXConnectThread(@NonNull TwitchBotX twitchBotX) {
+		this.twitchBotX = twitchBotX;
 	}
 
 	/**
@@ -42,11 +42,21 @@ public class TwitchBotXConnectThread extends Thread {
 	@Override
 	public void run() {
 		try {
-			this.pircBotX.startBot();
+			this.twitchBotX.getPircBotX().startBot();
 		} catch (Exception e) {
-			LOG.info("Exited from bot thread", e);
 			exitException = e;
 		}
+
+		if (!this.hasShutdown)
+			this.twitchBotX.disconnect();
+	}
+
+	/**
+	 * Forces the thread to stop, without generating a disconnect event
+	 */
+	public void shutdown() {
+		this.hasShutdown = true;
+		this.interrupt();
 	}
 
 }

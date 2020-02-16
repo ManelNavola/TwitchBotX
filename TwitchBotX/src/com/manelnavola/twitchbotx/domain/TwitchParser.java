@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.pircbotx.InputParser;
+import org.pircbotx.PircBotX;
 import org.pircbotx.UserHostmask;
 import com.google.common.collect.ImmutableMap;
 import com.manelnavola.twitchbotx.TwitchBotX;
@@ -24,10 +25,11 @@ public class TwitchParser extends InputParser {
 	/**
 	 * TwitchParser constructor
 	 * 
-	 * @param twitchBotX The PircBotX instance to parse based on Twitch IRC
+	 * @param twitchBotX The TwitchBotX instance to call events on
+	 * @param pircBotX   The PircBotX instance to parse
 	 */
-	public TwitchParser(@NonNull TwitchBotX twitchBotX) {
-		super(twitchBotX.getPircBotX());
+	public TwitchParser(@NonNull TwitchBotX twitchBotX, PircBotX pircBotX) {
+		super(pircBotX);
 		this.twitchBotX = twitchBotX;
 	}
 

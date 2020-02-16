@@ -50,29 +50,27 @@ public class TwitchBotX {
 	/**
 	 * TwitchBotX constructor
 	 * 
-	 * @param autoReconnect      Whether the bot should try reconnecting
-	 *                           automatically
-	 * @param maxReconnectTries  The maximum amount of retries to perform
-	 * @param autoReconnectDelay Delay in milliseconds between connection retries
+	 * @param reconnectAttempts The number of reconnect attempts to perform if the
+	 *                          bot failed to connect to Twitch servers
+	 * @param reconnectDelay    The delay between reconnect attempts in milliseconds
 	 */
-	public TwitchBotX(boolean autoReconnect, int maxReconnectTries, int autoReconnectDelay) {
+	public TwitchBotX(int reconnectAttempts, int reconnectDelay) {
 		twitchListener = new TwitchListener(this);
 		twitchFactory = new TwitchFactory(this);
 
 		pircBotX = new PircBotX(new Configuration.Builder().setAutoNickChange(false).setOnJoinWhoEnabled(false)
-				.setEncoding(Charset.forName("UTF-8")).setName("justinfan12345").addServer("irc.twitch.tv", 6697)
+				.setEncoding(Charset.forName("UTF-8")).setName("justinfan12345").addServer("irc.tweitch.tv", 6697)
 				.setSocketFactory(SSLSocketFactory.getDefault()).addListener(twitchListener)
-				.setAutoReconnect(autoReconnect).setAutoReconnectDelay(autoReconnectDelay).setBotFactory(twitchFactory)
-				.buildConfiguration());
+				.setBotFactory(twitchFactory).setAutoReconnect(true).setAutoReconnectAttempts(reconnectAttempts)
+				.setAutoReconnectDelay(reconnectDelay).buildConfiguration());
 	}
 
 	/**
-	 * Another TwitchBotX constructor
-	 * 
-	 * @param autoReconnect Whether the bot should try reconnecting automatically
+	 * TwitchBotX constructor with auto reconnect attempts set to 5 and recconect
+	 * delay set to 2000
 	 */
-	public TwitchBotX(boolean autoReconnect) {
-		this(autoReconnect, 5, 1000);
+	public TwitchBotX() {
+		this(5, 2000);
 	}
 
 	/**
@@ -100,14 +98,14 @@ public class TwitchBotX {
 	 * 
 	 * @throws Exception If the bot is already connected or failed to connect
 	 */
-	public synchronized void start() throws Exception {
+	public void connect() throws Exception {
 		if (botThread != null) {
 			Exception e = new Exception("The bot is already running!");
 			LOG.error("Tried starting a running bot!", e);
 			throw e;
 		} else {
-			botThread = new TwitchBotXConnectThread(pircBotX);
-			botThread.start();
+			this.botThread = new TwitchBotXConnectThread(this);
+			this.botThread.start();
 		}
 
 		while (botThread.isAlive()) {
@@ -116,28 +114,44 @@ public class TwitchBotX {
 				return;
 		}
 
-		throw botThread.getExitException();
+		throw this.botThread.getExitException();
+	}
+
+	/**
+	 * Attempts to run the bot asynchronously
+	 * 
+	 * @throws Exception If the bot is already connected or failed to connect
+	 */
+	public void connectAsync() {
+		if (botThread != null) {
+			Exception e = new Exception("The bot is already running!");
+			LOG.error("Tried starting a running bot!", e);
+		} else {
+			this.botThread = new TwitchBotXConnectThread(this);
+			this.botThread.start();
+		}
 	}
 
 	/**
 	 * Disconnects from Twitch servers and stops the bot
 	 */
-	public synchronized void stop() {
-		if (pircBotX.isConnected()) {
-			pircBotX.send().quitServer();
-		} else {
-			LOG.info("Stopping a disconnected bot...");
-			botThread.interrupt();
+	public void disconnect() {
+		if (this.botThread.getExitException() == null) {
+			// User force disconnect
+			this.botThread.shutdown();
+			this.pircBotX.close();
 		}
-		pircBotX.stopBotReconnect();
-		setIsConnectedInternalUseOnly(false);
-		try {
-			botThread.join();
-		} catch (InterruptedException e) {
-			LOG.error("Exception found when joining bot thread", e);
-			e.printStackTrace();
+		TwitchBotXListenerAdapter listenerAdapter = getListenerAdapter();
+		if (listenerAdapter != null) {
+			if (this.isConnected) {
+				listenerAdapter.onDisconnect();
+			} else {
+				listenerAdapter.onConnectFail(botThread.getExitException());
+			}
 		}
-		botThread = null;
+
+		this.botThread = null;
+		this.isConnected = false;
 	}
 
 	/**
@@ -164,7 +178,7 @@ public class TwitchBotX {
 	 */
 	public void partChannel(@NonNull String channelName) {
 		if (!this.isConnected) {
-			LOG.error("Cannot join a channel if the bot is not connected!");
+			LOG.error("Cannot part a channel if the bot is not connected!");
 			return;
 		}
 		if (!isConnectedTo(channelName)) {
@@ -190,8 +204,8 @@ public class TwitchBotX {
 	 * 
 	 * @param b True if the bot can be considered connected
 	 */
-	public void setIsConnectedInternalUseOnly(boolean b) {
-		isConnected = b;
+	public void zConfirmBotIsConnectedInternalUseOnly() {
+		this.isConnected = true;
 	}
 
 	/**
@@ -200,7 +214,7 @@ public class TwitchBotX {
 	 * @return The PircBotX instance
 	 */
 	public PircBotX getPircBotX() {
-		return pircBotX;
+		return this.pircBotX;
 	}
 
 }
