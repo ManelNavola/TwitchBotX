@@ -63,11 +63,11 @@ public class TwitchListener extends ListenerAdapter {
 			if (event.getV3Tags().containsKey("bits")) {
 				// Bits message
 				this.twitchBotXListenerAdapter
-						.onTwitchCheer(new TwitchCheerEvent(event.getChannelSource(), event.getV3Tags()));
+						.onTwitchCheer(new TwitchCheerEvent(event.getChannelSource().substring(1), event.getV3Tags()));
 			} else {
 				// Normal message
 				this.twitchBotXListenerAdapter.onTwitchMessage(
-						new TwitchMessageEvent(event.getChannelSource(), event.getV3Tags(), event.getMessage()));
+						new TwitchMessageEvent(event.getChannelSource().substring(1), event.getV3Tags(), event.getMessage()));
 			}
 		}
 	}

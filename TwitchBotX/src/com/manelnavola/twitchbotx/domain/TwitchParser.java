@@ -51,6 +51,7 @@ public class TwitchParser extends InputParser {
 					: null;
 			if (channel == null)
 				return;
+			channel = channel.substring(1);
 			switch (msdId) {
 			case "sub":
 			case "resub":

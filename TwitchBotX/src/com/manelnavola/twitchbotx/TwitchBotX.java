@@ -159,7 +159,8 @@ public class TwitchBotX {
 	 * 
 	 * @param channelName The name of the channel in lowercase
 	 */
-	public void joinChannel(@NonNull String channelName) {
+	public void joinChannel(@NonNull String cn) {
+		String channelName = cn.toLowerCase();
 		if (!this.isConnected) {
 			LOG.error("Cannot join a channel if the bot is not connected!");
 			return;
@@ -176,7 +177,8 @@ public class TwitchBotX {
 	 * 
 	 * @param channelName The name of the Twitch channel in lowercase
 	 */
-	public void partChannel(@NonNull String channelName) {
+	public void partChannel(@NonNull String cn) {
+		String channelName = cn.toLowerCase();
 		if (!this.isConnected) {
 			LOG.error("Cannot part a channel if the bot is not connected!");
 			return;
@@ -194,7 +196,8 @@ public class TwitchBotX {
 	 * @param channelName The name of the channel in lowercase
 	 * @return If the bot is connected to the channel
 	 */
-	public boolean isConnectedTo(@NonNull String channelName) {
+	public boolean isConnectedTo(@NonNull String cn) {
+		String channelName = cn.toLowerCase();
 		return this.pircBotX.getUserChannelDao().containsChannel("#" + channelName);
 	}
 
