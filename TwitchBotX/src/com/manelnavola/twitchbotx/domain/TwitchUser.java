@@ -130,25 +130,25 @@ public class TwitchUser {
 				StringTokenizer st = new StringTokenizer(badgeChain, ",");
 				while (st.hasMoreTokens()) {
 					switch (st.nextToken().split("/", 2)[0]) {
-					case "admin":
+					case "turbo":
 						this.badges[0] = true;
 						break;
-					case "broadcaster":
+					case "subscriber":
 						this.badges[1] = true;
 						break;
-					case "global_mod":
+					case "moderator":
 						this.badges[2] = true;
 						break;
-					case "moderator":
+					case "broadcaster":
 						this.badges[3] = true;
 						break;
-					case "subscriber":
+					case "staff":
 						this.badges[4] = true;
 						break;
-					case "staff":
+					case "global_mod":
 						this.badges[5] = true;
 						break;
-					case "turbo":
+					case "admin":
 						this.badges[6] = true;
 						break;
 					case "bits":
