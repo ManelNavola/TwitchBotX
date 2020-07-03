@@ -103,6 +103,7 @@ public class TwitchUser {
 				String[] badge = st.nextToken().split("/", 2);
 				switch (badge[0]) {
 				case "subscriber":
+				case "founder":
 					try {
 						this.subscriptionMonths = Short.parseShort(badge[1]);
 						return this.subscriptionMonths;
@@ -134,6 +135,7 @@ public class TwitchUser {
 						this.badges[0] = true;
 						break;
 					case "subscriber":
+					case "founder":
 						this.badges[1] = true;
 						break;
 					case "moderator":
