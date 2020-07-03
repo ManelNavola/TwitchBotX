@@ -22,7 +22,7 @@ public class TwitchUser {
 	 */
 	public enum Badge {
 		TURBO((byte) 0), SUBSCRIBER((byte) 1), MODERATOR((byte) 2), BROADCASTER((byte) 3), STAFF((byte) 4),
-		GLOBAL_MOD((byte) 5), ADMIN((byte) 6), BITS((byte) 7);
+		GLOBAL_MOD((byte) 5), ADMIN((byte) 6), BITS((byte) 7), FOUNDER((byte) 8);
 
 		private byte value;
 
@@ -116,6 +116,15 @@ public class TwitchUser {
 		}
 		return -1;
 	}
+	
+	/**
+	 * Checks if the user is subscribed to the channel he chatted in
+	 * 
+	 * @return True if the user is subscribed (has either a subscriber or founder badge)
+	 */
+	public boolean isSubscribed() {
+		return hasBadge(Badge.FOUNDER) || hasBadge(Badge.SUBSCRIBER);
+	}
 
 	/**
 	 * Checks if the user contains a certain badge
@@ -127,7 +136,7 @@ public class TwitchUser {
 		if (this.badges == null) {
 			String badgeChain;
 			if ((badgeChain = tags.get("badges")) != null) {
-				this.badges = new boolean[8];
+				this.badges = new boolean[9];
 				StringTokenizer st = new StringTokenizer(badgeChain, ",");
 				while (st.hasMoreTokens()) {
 					switch (st.nextToken().split("/", 2)[0]) {
@@ -135,7 +144,6 @@ public class TwitchUser {
 						this.badges[0] = true;
 						break;
 					case "subscriber":
-					case "founder":
 						this.badges[1] = true;
 						break;
 					case "moderator":
@@ -155,6 +163,10 @@ public class TwitchUser {
 						break;
 					case "bits":
 						this.badges[7] = true;
+						break;
+					case "founder":
+						this.badges[8] = true;
+						break;
 					}
 				}
 			}
